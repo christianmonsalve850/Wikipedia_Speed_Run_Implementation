@@ -1,6 +1,6 @@
 import numpy as np
-from logic.embedding import get_embedding
-from logic.wiki_graph import in_popular_pages
+from embedding import get_embedding
+from wiki_graph import in_popular_pages
 
 def semantic_heuristic(title: str, end) -> float:
     """

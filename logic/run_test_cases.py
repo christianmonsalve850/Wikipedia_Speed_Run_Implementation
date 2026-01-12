@@ -1,5 +1,5 @@
 import json
-from logic.main import run
+from main import run
 
 def fetch_tests():
     """

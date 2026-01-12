@@ -1,11 +1,11 @@
-from logic.graph import Node
+from graph import Node
 import time
 from queue import PriorityQueue
 import random
-from logic.heuristics import semantic_heuristic
-from logic.wiki_graph import get_wiki
-from logic.embedding import precompute_embeddings
-from cancal_event import cancel_event
+from heuristics import semantic_heuristic
+from wiki_graph import get_wiki
+from embedding import precompute_embeddings
+from cancel_event import cancel_event
 
 wikiObj = get_wiki()
 

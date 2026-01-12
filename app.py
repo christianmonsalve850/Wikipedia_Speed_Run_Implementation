@@ -1,7 +1,7 @@
 # TO RUN: flask --app ./flask_app/app.py run --debug
 from flask import Flask, render_template, request, jsonify
 from logic.main import run
-from cancal_event import cancel_event
+from cancel_event import cancel_event
 from logic.autocomplete import wikipedia_autocomplete
 
 app = Flask(__name__)
