@@ -5,7 +5,7 @@ import random
 from logic.heuristics import semantic_heuristic
 from logic.wiki_graph import get_wiki
 from logic.embedding import precompute_embeddings
-from ..cancel_event import cancel_event
+from cancel_event import cancel_event
 
 wikiObj = get_wiki()
 

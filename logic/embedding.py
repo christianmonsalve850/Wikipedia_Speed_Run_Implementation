@@ -1,7 +1,14 @@
 from sentence_transformers import SentenceTransformer
 
-# Load the small ModernBERT-based model (47M parameters)
-model = SentenceTransformer('ibm-granite/granite-embedding-small-english-r2')
+# Lazily create the model to avoid initializing heavy backends (e.g., MPS) at import time.
+_model = None
+
+def _get_model():
+    """Return the cached SentenceTransformer model, loading it on first use."""
+    global _model
+    if _model is None:
+        _model = SentenceTransformer('ibm-granite/granite-embedding-small-english-r2')
+    return _model
 
 embedding_cache = {}
 
@@ -27,6 +34,8 @@ def precompute_embeddings(titles, batch_size=64):
     if not missing:
         return
 
+    model = _get_model()
+    
     # model.encode(..., normalize_embeddings=True) returns normalized vectors
     vectors = model.encode(
         missing,
