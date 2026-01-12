@@ -1,6 +1,6 @@
 import numpy as np
-from flask_app.logic.embedding import get_embedding
-from flask_app.logic.wiki_graph import in_popular_pages
+from logic.embedding import get_embedding
+from logic.wiki_graph import in_popular_pages
 
 def semantic_heuristic(title: str, end) -> float:
     """

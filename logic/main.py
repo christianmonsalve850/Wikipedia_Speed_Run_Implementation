@@ -1,11 +1,11 @@
-from flask_app.logic.graph import Node
+from logic.graph import Node
 import time
 from queue import PriorityQueue
 import random
-from flask_app.logic.heuristics import semantic_heuristic
-from flask_app.logic.wiki_graph import get_wiki
-from flask_app.logic.embedding import precompute_embeddings
-from flask_app.cancal_event import cancel_event
+from logic.heuristics import semantic_heuristic
+from logic.wiki_graph import get_wiki
+from logic.embedding import precompute_embeddings
+from cancal_event import cancel_event
 
 wikiObj = get_wiki()
 

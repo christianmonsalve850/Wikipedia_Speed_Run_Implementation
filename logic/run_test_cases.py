@@ -1,5 +1,5 @@
 import json
-from flask_app.logic.main import run
+from logic.main import run
 
 def fetch_tests():
     """

@@ -1,6 +1,6 @@
 import requests
 import json
-from flask_app.logic.wiki_graph import get_wiki
+from logic.wiki_graph import get_wiki
 import random
 
 test_number = 0

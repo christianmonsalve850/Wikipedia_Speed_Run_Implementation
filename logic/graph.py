@@ -1,6 +1,6 @@
 import numpy as np
-from flask_app.logic.wiki_graph import get_links
-from flask_app.logic.embedding import precompute_embeddings
+from logic.wiki_graph import get_links
+from logic.embedding import precompute_embeddings
 
 class Node:
     """
