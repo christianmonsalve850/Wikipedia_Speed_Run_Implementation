@@ -1,6 +1,6 @@
 import numpy as np
-from wiki_graph import get_links
-from embedding import precompute_embeddings
+from logic.wiki_graph import get_links
+from logic.embedding import precompute_embeddings
 
 class Node:
     """
