@@ -1,4 +1,4 @@
-# Wikipedia Speed Runner
+<a href="https://huggingface.co/spaces/KrispyChris62/flask-app"><h1>Wikipedia Speed Runner</h1></a>
 
 ### Short Description:
 <p>Wikipedia Speed Runner is a web app that finds the shortest path between two Wikipedia articles using only the links within each page. It uses graph search algorithms like A*, optionally guided by semantic heuristics with word embeddings, and provides a simple Flask-based interface to explore results interactively.</p>
