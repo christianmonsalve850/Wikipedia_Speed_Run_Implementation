@@ -1,0 +1,140 @@
+<!-- Thought Process -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="card">
+        <h3>1. Motivation</h3>
+        <p> Why this project? 
+            <br>
+            Wikipedia speed running is usually a human game: starting from one article and reaching 
+            another using only hyperlinks. I wanted to explore whether a program could do the same 
+            thing — and more importantly, how it would reason about where to go next.
+            <br>
+            This project combines:
+            <ul>
+                <li>Graph search (A*, pruning, heuristics)</li>
+                <li>Natural language understanding</li>
+                <li>Real-world messiness (Wikipedia is not a clean graph)</li>
+            </ul>
+        </p>
+        <p>The challenge wasn’t just finding a path, but finding one efficiently, given Wikipedia’s 
+            massive size.</p>
+    </div>
+        <div class="card">
+        <h3>2. Problem Framing</h3>
+        <p> Wikipedia can be viewed as a directed graph:
+            <br>
+            <ul>
+                <li>Nodes → Wikipedia pages</li>
+                <li>Edges → Hyperlinks between pages</li>
+            </ul>
+        </p>  
+        <p>
+            The task:
+            <br>
+            Given a start page and an end page, find a valid sequence of links that connects them.
+            <br>
+            A naive breadth-first search quickly becomes infeasible — many pages contain 
+            thousands of links. Without guidance, the search explodes.
+        </p>
+    </div>
+    <div class="card">
+        <h3>3. Initial Approach</h3>
+        <h4>Pure Graph Search</h4>
+        <p> Breadth-first and depth-first search were quickly ruled out due to:
+            <ul>
+                <li>Exponential branching factor</li>
+                <li>Excessive API calls</li>
+                <li>Long runtimes with no convergence</li>
+            </ul>
+        </p>
+        <h4>Word2Vec-Based Heuristics</h4>
+        <p> I initially used a pre-trained Word2Vec model to estimate semantic similarity 
+            between page titles.
+            <br>
+            This worked sometimes, but failed often because:
+            <ul>
+                <li>Many Wikipedia titles aren’t in the vocabulary</li>
+                <li>Multi-word titles like “Pizza Farm” or “Digital Object Identifier” break 
+                    token assumptions</li>
+                <li>Capitalization and formatting inconsistencies caused false negatives</li>
+            </ul>
+        </p>  
+        <p>Despite being fast, Word2Vec proved too brittle for real-world Wikipedia data.</p>
+    </div>
+    <div class="card">
+        <h3>4. Key Insight: Wikipedia Navigation Is a Semantic Problem</h3>
+        <p> A major turning point was realizing:
+            <br>
+            Wikipedia navigation isn’t about exact word matching — it’s 
+            about conceptual proximity.
+            <br>
+            This led me to switch to sentence embeddings, which:
+            <ul>
+                <li>Handle arbitrary phrases</li>
+                <li>Generalize to rare and unseen titles</li>
+                <li>Capture broader semantic meaning</li>
+            </ul>
+        </p>
+        <p>I adopted a lightweight BERT-style embedding model.</p>
+    </div>
+    <div class="card">
+        <h3>5. The Heuristic Function</h3>
+        <p>At the core of the system is a heuristic that estimates how “close” a 
+            page is to the target.
+            <br><br>
+            Lower values mean “closer” to the goal.
+            <br>
+            This heuristic guides an A*-style search, allowing the algorithm to prioritize 
+            promising links instead of exploring blindly.
+        </p>
+    </div>
+    <div class="card">
+        <h3>6. Performance Challenges & Optimizations</h3>
+        <p>Even with a good heuristic, performance was a major challenge.</p>
+        <h4>Techniques That Worked</h4>
+        <div class="section">
+            <h5>Top-K Pruning</h5>
+            <p> Instead of expanding all links, I only keep the K best candidates at 
+                each step based on heuristic score.
+                <br>
+                This reduced runtime by an order of magnitude:
+                <ul>
+                    <li>K = 2 → fast but greedy</li>
+                    <li>K = 5 → better coverage, slower</li>
+                </ul>
+            </p>
+        </div>
+        <div class="section">
+            <h5>Batch Embedding</h5>
+            <p> Embedding each title individually was too slow.
+                I switched to batch encoding and cached results globally.
+            </p>
+        </div>
+        <div class="section">
+            <h5>Caching</h5>
+            <p> Once an embedding is computed, it is reused across all searches.
+                This dramatically reduced repeated work.
+            </p>
+        </div>
+        <div class="section">
+            <h5>Batch Embedding</h5>
+            <p> Before computing embeddings, I discard certain links.</p>
+        </div>
+    </div>
+    <div class="card">
+        <h3>7. Results</h3>
+        <p> The system:
+            <ol>
+                <li>Solves many non-trivial navigation tasks in under 10 seconds</li>
+                <li>Finds meaningful semantic paths (e.g., culture → geography → politics)</li>
+                <li>Demonstrates how embedding-based heuristics outperform structural search alone</li>
+            </ol>
+        </p>
+        <p>However:</p>
+        <ol>
+            <li>There is no guarantee of convergence</li>
+            <li>Some targets are effectively unreachable within time limits</li>
+        </ol>
+    </div>
+{% endblock %}

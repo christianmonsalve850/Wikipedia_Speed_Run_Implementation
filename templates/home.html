@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Welcome to my Wikipedia Speed Run Implementation!</h1>
+    <div class="card">
+        <h3>What it does: </h3>
+        <p>This algorithm finds concise, human-like routes from one Wikipedia
+            article to another by combining semantic sentence embeddings 
+            with a heuristic best-first search. Instead of relying solely 
+            on exact link text or exhaustive exploration, it ranks candidate 
+            pages by how semantically close they are to the target and expands 
+            the most promising paths first.
+        </p>
+    </div>
+    <div class="card">
+        <h3>How it works (brief): </h3>
+        <ul>
+            <li>Represent pages using sentence embeddings that capture meaning, 
+                not just keywords.</li>
+            <li>Use a cosine similarity-based heuristic to estimate how close 
+                a page is to the target.</li>
+            <li>Run an A*-style best-first search augmented with beam search 
+                to focus on the most promising expansions.</li>
+            <li>Apply light penalties for highly popular pages and occasional 
+                random exploration to avoid local traps.</li>
+            <li>Stop when a short path is found or configurable time/depth 
+                limits are reached.</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h3>Benefits:</h3>
+        <ul>
+            <li>Produces semantically sensible, short paths (more human-like 
+                navigation)</li>
+            <li>Efficient—focuses search on promising directions rather 
+                than brute force</li>
+            <li>Robust—balances exploitation with exploration to discover 
+                creative routes</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h3>Technologies used:</h3>
+        <ul>
+            <li>Python</li>
+            <li>wikipedia-api for link traversal</li>
+            <li>sentence-transformers (Modern BERT-based embedding model)</li>
+            <li>NumPy for vector operations</li>
+        </ul>
+    </div>
+    <form id="run-form" method="POST" autocomplete="off">
+        <div class="page-center">
+            <div class="specs-container">
+                <div class="specs-top">
+                    <h4 class="param-label">Beam Search (K):
+                        <span class="info" data-tooltip="Limits the number of candidate paths explored at each depth.
+                        Higher K improves quality but increases runtime.">ⓘ</span>
+                        <input type="number" name="k" min="1" max="10" required>
+                    </h4>
+                    <h4 class="param-label">Time Limit (sec):
+                        <span class="info" data-tooltip="Maximum time the algorithm is allowed to search before stopping.">ⓘ</span>
+                        <input type="number" name="time_limit" min="1" max="240" required>
+                    </h4>
+                    <h4 class="param-label">Max Depth:
+                        <span class="info" data-tooltip="Maximum number of Wikipedia links the path is allowed to traverse.">ⓘ</span>
+                        <input type="number" name="max_depth" min="1" max="20" required>
+                    </h4>
+                </div>
+                <div class="specs-bot">
+                    <h4 class="param-label">Start:
+                        <span class="info" data-tooltip="The Wikipedia article where the search begins (capitalization matters).">ⓘ</span>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" name="start" id="start-input" required>
+                            <ul id="start-suggestions" class="autocomplete-list"></ul>
+                        </div>
+                    </h4>
+                    <h4 class="param-label">End: 
+                        <span class="info" data-tooltip="The target Wikipedia article the algorithm tries to reach (capitalization matters).">ⓘ</span>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" name="end" id="end-input" required>
+                            <ul id="end-suggestions" class="autocomplete-list"></ul>
+                        </div>
+                    </h4>
+                </div>
+                <div class="search-btn">
+                    <button type="submit">Search</button>
+                    <span class="search-info" data-tooltip="Search may take up to the time limit, do not be alarmed.">ⓘ</span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="loading-overlay">
+        <span class="close-btn" id="closeLoading">&times;</span>
+        <div class="spinner"></div>
+    </div>
+
+
+
+    <div id="results"></div>
+
+    <script src="{{ url_for('static', filename='/index.js') }}"></script>
+{% endblock %}

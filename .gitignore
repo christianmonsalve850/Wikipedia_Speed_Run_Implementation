@@ -1,0 +1,5 @@
+demo.jgp
+__pycache__/
+
+/flask_app/wiki/
+/flask_app/__pycache__/
